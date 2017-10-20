@@ -11,11 +11,14 @@ namespace EjercicioMonogame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D imagen;
-        Vector2 PosicionFotograma = new Vector2(350, 250);
+        Texture2D balon, ronaldo,GameOver;
+        Rectangle PosicionBalon = new Rectangle(0,0,100,100);
+        Rectangle Posicionronaldo = new Rectangle(350, 365, 100, 115);
+        Rectangle PosicionGameOver = new Rectangle(150, 90, 500, 300);
         byte r, g, b;
         bool Direccion_Horizontal;
         bool Direccion_Vertical;
+        bool Choque;
 
         public Game1()
         {
@@ -37,6 +40,7 @@ namespace EjercicioMonogame
             b = 0;
             Direccion_Horizontal = true;
             Direccion_Vertical = true;
+            Choque = false;
             base.Initialize();
         }
 
@@ -48,7 +52,9 @@ namespace EjercicioMonogame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            imagen = Content.Load<Texture2D>("Balon4");
+            balon = Content.Load<Texture2D>("Balon4");
+            ronaldo = Content.Load<Texture2D>("Ronaldo");
+            GameOver = Content.Load<Texture2D>("Game Over");
 
             // TODO: use this.Content to load your game content here
         }
@@ -72,14 +78,14 @@ namespace EjercicioMonogame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             //Movemos Horizontal
-            if (PosicionFotograma.X >= 590)
+            if (PosicionBalon.X >= 700)
             {
                 Direccion_Horizontal = false;
                 r += 40;
                 g += 70;
                 b += 10;
             }
-            else if (PosicionFotograma.X <= 0)
+            else if (PosicionBalon.X <= 0)
             {
                 Direccion_Horizontal = true;
                 r += 10;
@@ -88,23 +94,23 @@ namespace EjercicioMonogame
             }
             if (Direccion_Horizontal == true)
             {
-                PosicionFotograma.X += 5;
+                PosicionBalon.X += 5;
             }
 
             else if (Direccion_Horizontal == false)
             {
-                PosicionFotograma.X -= 5;
+                PosicionBalon.X -= 5;
             }
 
             //Movemos vertical
-            if (PosicionFotograma.Y >= 280)
+            if (PosicionBalon.Y >= 380)
             {
                 Direccion_Vertical = false;
                 r += 80;
                 g += 60;
                 b += 10;
             }
-            else if (PosicionFotograma.Y <= 0)
+            else if (PosicionBalon.Y <= 0)
             {
                 Direccion_Vertical = true;
                 r += 100;
@@ -113,12 +119,44 @@ namespace EjercicioMonogame
             }
             if (Direccion_Vertical == true)
             {
-                PosicionFotograma.Y += 5;
+                PosicionBalon.Y += 5;
             }
 
             else if (Direccion_Vertical == false)
             {
-                PosicionFotograma.Y -= 5;
+                PosicionBalon.Y -= 5;
+            }
+
+            //Movimiento por teclado
+            if (Posicionronaldo.X >= 700)
+            {
+
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                Posicionronaldo.X += 5;
+            }
+
+            if (Posicionronaldo.X <=0)
+            {
+                Posicionronaldo.X += 0;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                Posicionronaldo.X -= 5;
+            }
+
+            //Colisión del balón y el jugador
+            if (PosicionBalon.Intersects(Posicionronaldo))
+            {
+                Choque = true;
+            }
+
+            if (Choque == true)
+            {
+                r = 0;
+                g = 0;
+                b = 0;
             }
 
             // TODO: Add your update logic here
@@ -135,7 +173,16 @@ namespace EjercicioMonogame
             Color miColor = new Color(r, g, b);
             GraphicsDevice.Clear(miColor);
             spriteBatch.Begin();
-            spriteBatch.Draw(imagen, PosicionFotograma, Color.White);
+            if ( Choque == false)
+            {
+                spriteBatch.Draw(ronaldo, Posicionronaldo, Color.White);
+                spriteBatch.Draw(balon, PosicionBalon, Color.White);
+            }
+            else if (Choque == true)
+            {
+                spriteBatch.Draw(GameOver, PosicionGameOver, Color.White);
+            }
+            
 
             spriteBatch.End();
 
