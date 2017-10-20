@@ -19,6 +19,7 @@ namespace EjercicioMonogame
         bool Direccion_Horizontal;
         bool Direccion_Vertical;
         bool Choque;
+        //Juego
 
         public Game1()
         {
